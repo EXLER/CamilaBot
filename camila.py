@@ -28,6 +28,23 @@ class Camila(commands.Bot):
         super().__init__(command_prefix=command_prefix, description=description)
 
         self.startup = datetime.now()
+        self.channel_config = configparser.ConfigParser()
+        self.channel_config.read("channels.ini", encoding="utf-8")
+
+        self.roles = {
+            "MITK Core": None,
+            "MITK Utils": None,
+            "Roboty": None,
+            "Omnibus": None,
+        }
+
+        self.channels = {
+            "syf": None,
+            "obrazki": None,
+            "granie": None,
+            "uczelnia": None,
+            "bot": None,
+        }
 
         self.failed_cogs = []
         self.exitcode = 0
@@ -39,6 +56,44 @@ class Camila(commands.Bot):
             except BaseException as e:
                 utils.log.warn(f"{extension} failed to load.")
                 self.failed_cogs.append([extension, type(e).__name__, e])
+
+    def load_channels(self):
+        if not self.channel_config.has_section("Channels"):
+            self.channel_config.add_section("Channels")
+
+        for n in self.channels:
+            if n in self.channel_config.options("Channels"):
+                self.channels[n] = self.guild.get_channel(
+                    self.channel_config.getint("Channels", n)
+                )
+            else:
+                self.channels[n] = discord.utils.get(self.guild.text_channels, name=n)
+                if not self.channels[n]:
+                    utils.log.warn(f"Failed to find channel: {n}")
+                    continue
+                self.channel_config["Channels"][n] = str(self.channels[n].id)
+                with open("channels.ini", "w", encoding="utf-8") as f:
+                    self.channel_config.write(f)
+
+    def load_roles(self):
+        for n in self.roles.keys():
+            self.roles[n] = discord.utils.get(self.guild.roles, name=n)
+            if not self.roles[n]:
+                utils.log.warn(f"Failed to find role: {n}")
+
+    async def on_ready(self):
+        self.guild = self.guilds[0]
+
+        self.load_channels()
+        self.load_roles()
+
+        startup_message = f"{self.user.name} has started on server '{self.guild}' with {self.guild.member_count} members!"
+        if len(self.failed_cogs) != 0:
+            startup_message += "\n\nAddons failed to load:\n"
+            for fail in self.failed_cogs:
+                startup_message += "\n{}: `{}: {}`".format(*fail)
+        utils.log.info(startup_message)
+        await self.channels["bot"].send(startup_message)
 
 
 def run_bot() -> int:
@@ -63,7 +118,7 @@ def run_bot() -> int:
     bot.help_command = commands.DefaultHelpCommand(dm_help=None)
     utils.log.info(f"Starting Camila on commit {commit} on branch {branch}")
     bot.load_cogs()
-    bot.run(config["Discord"]["BotToken"])
+    bot.run(config["Secrets"]["BotToken"])
 
     return bot.exitcode
 
