@@ -1,9 +1,9 @@
 from discord.ext import commands
 
 
-class CollegeCalendar(commands.Cog):
+class Calendar(commands.Cog):
     """
-    Database actions regarding repeating or singular future tasks.
+    Schedule one-time or repeating events.
     """
 
     def __init__(self, bot):
@@ -18,4 +18,4 @@ class CollegeCalendar(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(CollegeCalendar(bot))
+    bot.add_cog(Calendar(bot))

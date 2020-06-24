@@ -74,55 +74,47 @@ class Camila(commands.Bot):
         exc = getattr(exc, "original", exc)
 
         if isinstance(exc, commands.CommandNotFound):
-            await ctx.send(
-                "Nie znalaziono komendy. Wpisz !help aby zobaczyć dostępne komendy."
-            )
+            await ctx.send("Command not found. Write !help to see available commands")
         elif isinstance(exc, commands.ArgumentParsingError):
             await ctx.send_help(ctx.command)
         elif isinstance(exc, commands.NoPrivateMessage):
-            await ctx.send("Nie odpisuję na prywatne wiadomości.")
+            await ctx.send("I don't write private messages.")
         elif isinstance(exc, commands.MissingPermissions):
-            await ctx.send(f"{author.mention} Nie masz tutaj wystarczającej mocy.")
+            await ctx.send(f"{author.mention} You have no power here.")
         elif isinstance(exc, commands.CheckFailure):
-            await ctx.send(f"{author.mention} Nie możesz tego zrobić.")
+            await ctx.send(f"{author.mention} You can't do that here.")
         elif isinstance(exc, commands.BadArgument):
-            await ctx.send(
-                f"{author.mention} Źle to robisz! Podany argument jest zły: `{exc}`\n"
-            )
+            await ctx.send(f"{author.mention} A bad argument was given: `{exc}`\n")
             await ctx.send_help(ctx.command)
         elif isinstance(exc, discord.ext.commands.errors.CommandOnCooldown):
             await ctx.send(
-                f"{author.mention} Zwolnij kowboju! Ta komenda została użyta {exc.cooldown.per - exc.retry_after:.2f}s temu. Poczekaj chwilę i spróbuj ponownie"
+                f"{author.mention} This command was used {exc.cooldown.per - exc.retry_after:.2f}s ago and is on cooldown."
             )
         elif isinstance(exc, commands.MissingRequiredArgument):
             await ctx.send(
-                f"{author.mention} Brakuje Ci wymaganego argumentu: {exc.param.name}\n"
+                f"{author.mention} You are missing required argument: {exc.param.name}\n"
             )
             await ctx.send_help(ctx.command)
         elif isinstance(exc, discord.NotFound):
-            await ctx.send("Nie znaleziono podanego ID.")
+            await ctx.send("ID not found.")
         elif isinstance(exc, discord.Forbidden):
-            await ctx.send(f"Jak Ci mam pomóc skoro mi nie pozwalasz!\n`{exc.text}`")
+            await ctx.send(f"You are not letting me help: \n`{exc.text}`")
         elif isinstance(exc, commands.CommandInvokeError):
             await ctx.send(
-                f"{author.mention} Wystąpił wyjątek podczas użycia komendy `{command}`."
+                f"{author.mention} `{command}` raised an exception during usage."
             )
         else:
             if not isinstance(command, str):
                 command.reset_cooldown(ctx)
             await ctx.send(
-                f"{author.mention} Nieoczekiwany wyjątek wystąpił podczas używania komendy `{command}`."
+                f"{author.mention} Unexpected exception occurred while using the command: `{command}`."
+            )
+            log.warn(
+                f"Unexpected exception occured while using the `{command}`: {exc.text}"
             )
 
     async def on_error(self, event_method, *args, **kwargs):
         log.error(f"Error in event: {event_method}")
-
-    async def on_message(self, message):
-        if isinstance(message.channel, discord.DMChannel):
-            # Ignore direct messages
-            return
-
-        await self.process_commands(message)
 
 
 def run_bot() -> int:
