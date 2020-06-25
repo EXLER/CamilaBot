@@ -106,6 +106,8 @@ class Music(commands.Cog):
                 ),
                 after=lambda e: self.queue(guild_id, queue_place + 1),
             )
+        else:
+            self.voice_queues[guild_id] = []
 
 
 def setup(bot):
