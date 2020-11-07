@@ -1,6 +1,6 @@
 import os
+import uuid
 
-import discord
 import youtube_dl
 
 from utils import log, validators
@@ -9,6 +9,8 @@ from utils import log, validators
 def youtube_download(query) -> dict:
     """Downloads a given URL from YouTube using youtube-dl.
        Returns dict if success, otherwise None"""
+    filename = str(uuid.uuid4())
+
     ytdl_opts = {
         "quiet": "True",
         "format": "bestaudio/best",
@@ -20,7 +22,7 @@ def youtube_download(query) -> dict:
             }
         ],
         "outtmpl": os.path.join(
-            os.path.abspath(os.getcwd()), "data", "audio", "%(title)s.%(ext)s"
+            os.path.abspath(os.getcwd()), "data", "audio", f"{filename}.%(ext)s"
         ),
     }
 
@@ -37,4 +39,4 @@ def youtube_download(query) -> dict:
     if not title:
         return None
 
-    return {"title": title, "duration": duration}
+    return {"filename": filename, "title": title, "duration": duration}

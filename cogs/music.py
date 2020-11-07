@@ -103,7 +103,7 @@ class Music(commands.Cog):
         if queue_place < len(self.voice_queues[guild_id]):
             self.voice_channels[guild_id].play(
                 discord.FFmpegPCMAudio(
-                    f"data/audio/{self.voice_queues[guild_id][queue_place]['title']}.mp3"
+                    f"data/audio/{self.voice_queues[guild_id][queue_place]['filename']}.mp3"
                 ),
                 after=lambda e: self.queue(guild_id, queue_place + 1),
             )
