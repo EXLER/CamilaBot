@@ -1,5 +1,6 @@
 discord.py
 aiosqlite3
+async-timeout
 youtube-dlc
 pynacl
 python-dotenv

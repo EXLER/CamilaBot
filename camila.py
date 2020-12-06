@@ -16,7 +16,8 @@ except ImportError:
     )
     exit(0)
 
-from utils import database, constants
+from camila.constants import *
+from camila.database import DatabaseConnector
 
 logging.basicConfig(
     level=logging.INFO,
@@ -67,9 +68,9 @@ class Camila(commands.Bot):
                 self.failed_cogs.append([extension, type(e).__name__, e])
 
     async def on_ready(self):
-        self.db_holder = database.DatabaseConnector()
+        self.db_holder = DatabaseConnector()
         await self.db_holder.load_db(
-            constants.DB_PATH,
+            DB_PATH,
             self.loop,
         )
 
@@ -134,9 +135,8 @@ class Camila(commands.Bot):
             )
 
     async def on_error(self, event_method, *args, **kwargs):
-        logging.error(f"Error in event: {event_method}\n")
         msg = format_exc()
-        logging.error(f"Error message:\n{msg}")
+        logging.error(f"Error in event: {event_method}, error msg: {msg}")
 
 
 def run_bot() -> int:
