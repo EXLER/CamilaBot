@@ -4,7 +4,6 @@ import os
 import sys
 import random
 import logging
-from subprocess import check_output, CalledProcessError
 from traceback import format_exc
 
 try:
@@ -140,27 +139,12 @@ class Camila(commands.Bot):
 
 
 def run_bot() -> int:
-    # Attempt to get current git information
-    try:
-        commit = check_output(["git", "rev-parse", "HEAD"]).decode("ascii")[:-1]
-    except CalledProcessError as e:
-        print(f"Checking for git commit failed: {type(e).__name__}: {e}")
-        commit = "<unknown>"
-
-    try:
-        branch = check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"]).decode()[
-            :-1
-        ]
-    except CalledProcessError as e:
-        print(f"Checking for git branch failed: {type(e).__name__}: {e}")
-        branch = "<unknown>"
-
     bot = Camila(
         (".", "!"),
         description="Camila, a music/helper bot for managing small and private servers",
     )
     bot.help_command = commands.DefaultHelpCommand(dm_help=False)
-    logging.info(f"Starting Camila on commit {commit} on branch {branch}")
+    logging.info(f"Starting SuperCamila")
     bot.load_cogs()
     try:
         bot.run(os.getenv("DISCORD_BOT_TOKEN"))

@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="resources/logo.png" width="400">
+    <img src="logo.png" width="400">
     <p align="center">🦸 Discord music/helper bot for managing small and private servers</p>
 </p>
 
