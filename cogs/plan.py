@@ -60,7 +60,7 @@ class Plan(commands.Cog):
                 await ctx.send("Załącznik nie jest zdjęciem!")
                 return
 
-            await ctx.send("Nowy plan ustawiony!")
+        await ctx.send("Nowy plan ustawiony!")
 
 
 def setup(bot):
