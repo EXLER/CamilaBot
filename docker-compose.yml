@@ -6,3 +6,7 @@ services:
         command: python camila.py
         volumes:
             - .:/src
+            - supercamila:/src/data
+
+volumes:
+    supercamila:
