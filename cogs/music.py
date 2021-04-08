@@ -3,14 +3,14 @@ import asyncio
 import itertools
 import functools
 
-import youtube_dlc
+import youtube_dl
 import discord
 from discord.ext import commands
 from async_timeout import timeout
 
 from camila.exceptions import VoiceError, YTDLError
 
-youtube_dlc.utils.bug_reports_message = lambda: ""
+youtube_dl.utils.bug_reports_message = lambda: ""
 
 
 class YTDLSource(discord.PCMVolumeTransformer):
@@ -35,7 +35,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         "options": "-vn",
     }
 
-    ytdl = youtube_dlc.YoutubeDL(YTDL_OPTIONS)
+    ytdl = youtube_dl.YoutubeDL(YTDL_OPTIONS)
 
     def __init__(
         self,

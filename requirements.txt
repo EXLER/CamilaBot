@@ -1,7 +1,7 @@
 discord.py
 aiosqlite3
 async-timeout
-youtube-dlc
+youtube-dl
 pynacl
 python-dotenv
 requests
